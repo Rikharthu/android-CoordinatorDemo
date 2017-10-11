@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
 
     private List<String> mData;
+    OnItemVisibleListener mOnItemVisibleListener;
 
     public TextAdapter(List<String> data) {
         mData = data;
@@ -27,11 +28,18 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(mData.get(position));
+        if (mOnItemVisibleListener != null) {
+            mOnItemVisibleListener.onItemVisible(position, mData.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void setOnItemVisibleListener(OnItemVisibleListener onItemVisibleListener) {
+        mOnItemVisibleListener = onItemVisibleListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,5 +55,9 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
         public void bind(String data) {
             mDataTextView.setText(data);
         }
+    }
+
+    public static interface OnItemVisibleListener {
+        void onItemVisible(int position, String data);
     }
 }
